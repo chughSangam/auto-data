@@ -1,8 +1,8 @@
 /**
- * Copyright © 2014 Insonix
+ * Copyright Â© 2014 Insonix
 
  * Permission is hereby granted, free of charge, to any person obtaining a copy of these 
- * Experiments and associated documentation files (the “Software”), to deal in the Software 
+ * Experiments and associated documentation files (the â€œSoftwareâ€�), to deal in the Software 
  * without restriction, including without limitation the rights to use, copy, modify, merge, 
  * publish, distribute, sub-license, and/or sell copies of the Software, and to permit persons 
  * to whom the Software is furnished to do so, subject to the following conditions:
@@ -10,7 +10,7 @@
  * The above copyright notice and this permission notice shall be included in all copies or 
  * substantial portions of the Software.
  * 
- * THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING 
+ * THE SOFTWARE IS PROVIDED â€œAS ISâ€�, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING 
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND 
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, 
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
@@ -60,6 +60,7 @@ public class Toolbox {
 	public static int generateNumber(int min, int max) throws Exception {
 		
 		if(min>max) throw new Exception("max value must be greater than min value");
+		if(min<=0) throw new Exception("min value must be greater than 0");
 		Random random= new Random();
 		int randomNumber=random.nextInt(max);
 		while(randomNumber<=min)
@@ -96,10 +97,14 @@ public class Toolbox {
 	 * @return
 	 * @throws Exception
 	 */
-	public static String generateRandomString(int length, boolean alphaNumeric, boolean withSpecialChars) throws Exception {
+	public static String generateRandomString(int min,int max, boolean alphaNumeric, boolean withSpecialChars) throws Exception {
 		StringBuilder common = new StringBuilder("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz");
+		if(min>max) throw new Exception("max value must be greater than min value");
+		if(min<=0) throw new Exception("min value must be greater than 0");
+		int length=Toolbox.generateNumber(min, max);
 		if(alphaNumeric) common.append("0123456789");
 		if(withSpecialChars) common.append("`!@#$%^&*()=");
+		//if(length<3) throw new Exception("Length must be greater than 3");
 		StringBuilder outputString= new StringBuilder();
 		int i=1;
 		Random random= new Random();
