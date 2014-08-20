@@ -43,25 +43,71 @@ public class Toolbox {
 	 */
 	public static int generateNumber(int max) throws Exception {
 		Random random = new Random();
-		if(max<=1) throw new Exception("max value must be greator then 1");
+		if(max<=1) throw new Exception("max value must be greater then 1");
 		int randomNumber = random.nextInt(max);
 		while(randomNumber==0) {
 			randomNumber = random.nextInt(max);
 		}
 		return randomNumber;
 	}
-	
+	/**
+	 * This method generates random number  based on
+	 * @param min
+	 * @param max
+	 * @return
+	 * @throws Exception
+	 */
 	public static int generateNumber(int min, int max) throws Exception {
-		return 0;
+		
+		if(min>max) throw new Exception("max value must be greater than min value");
+		Random random= new Random();
+		int randomNumber=random.nextInt(max);
+		while(randomNumber<=min)
+		{
+			randomNumber=random.nextInt(max);
+		}
+		return randomNumber;
 	}
+	/**
+	 * This method generates random number based on minimum , maximum value and seed(starting) value. 
+	 * @param min
+	 * @param max
+	 * @param seed
+	 * @return
+	 * @throws Exception
+	 */
 	public static int generateNumber(int min, int max, int seed) throws Exception {
-		return 0;
+		if(min>max)  throw new Exception("max value must be greater than min value");
+		else if(min>seed)  throw new Exception("seed value must be greater than min value");
+		else if(max<seed)  throw new Exception("seed value must be smaller than max value");
+		Random random= new Random(seed);
+		int randomNumber=random.nextInt(max);
+		while(randomNumber<=seed)
+		{
+			randomNumber=random.nextInt(max);
+		}
+		return randomNumber;
 	}
-	
-	public static String generateNumber(int length, boolean alphaNumeric, boolean withSpecialChars) throws Exception {
+	/**
+	 * This method returns a String value based on the below parameters
+	 * @param length
+	 * @param alphaNumeric
+	 * @param withSpecialChars
+	 * @return
+	 * @throws Exception
+	 */
+	public static String generateRandomString(int length, boolean alphaNumeric, boolean withSpecialChars) throws Exception {
 		StringBuilder common = new StringBuilder("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz");
 		if(alphaNumeric) common.append("0123456789");
 		if(withSpecialChars) common.append("`!@#$%^&*()=");
-		return null;
+		StringBuilder outputString= new StringBuilder();
+		int i=1;
+		Random random= new Random();
+		while(i<=length)
+		{
+	    outputString.append(common.charAt(random.nextInt(common.length()-1)));
+		i++;
+		}
+		return outputString.toString();
 	}
 }
