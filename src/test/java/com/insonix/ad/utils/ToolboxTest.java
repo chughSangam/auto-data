@@ -29,7 +29,7 @@ public class ToolboxTest {
     {
     	for(int i=0;i<10;i++) {
     	try{
-    		logger.info(""+Toolbox.generateNumber(45,150));
+    		logger.info("minmax number"+Toolbox.generateNumber(45,150));
     	}
     	catch(Exception e)
     	{
@@ -47,7 +47,7 @@ public class ToolboxTest {
     {
     	for(int i=0;i<10;i++)
     	{
-    		int number=Toolbox.generateNumber(0, 450);
+    		int number=Toolbox.generateNumber(3, 450);
     		try {
 				logger.info("Seed Value: "+Toolbox.generateNumber(0, 450, number));
 			} catch (Exception e) {
@@ -66,13 +66,14 @@ public class ToolboxTest {
     	try {
     		for(int i=0;i<10;i++ )
     		{
-			logger.info("String generated containing only Alphabets ; "+ Toolbox.generateRandomString(40, false, false));
-			logger.info("String generated with Alphanumerics : " +Toolbox.generateRandomString(45, true, false));
-			logger.info("String genarated with SpecialCharacters : "+Toolbox.generateRandomString(45, true,true));
+			logger.info("String generated containing only Alphabets ; "+ Toolbox.generateRandomString(1,20, false, false));
+			logger.info("String generated with Alphanumerics : " +Toolbox.generateRandomString(2,34, true, false));
+			logger.info("String genarated with SpecialCharacters : "+Toolbox.generateRandomString(3,40, true,true));
     		}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.getMessage());
+			//e.printStackTrace();
 		}
     	
     }
