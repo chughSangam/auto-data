@@ -1,8 +1,8 @@
 /**
- * Copyright Â© 2014 Insonix
+ * Copyright © 2014 Insonix
 
  * Permission is hereby granted, free of charge, to any person obtaining a copy of these 
- * Experiments and associated documentation files (the â€œSoftwareâ€�), to deal in the Software 
+ * Experiments and associated documentation files (the Software), to deal in the Software 
  * without restriction, including without limitation the rights to use, copy, modify, merge, 
  * publish, distribute, sub-license, and/or sell copies of the Software, and to permit persons 
  * to whom the Software is furnished to do so, subject to the following conditions:
@@ -10,7 +10,7 @@
  * The above copyright notice and this permission notice shall be included in all copies or 
  * substantial portions of the Software.
  * 
- * THE SOFTWARE IS PROVIDED â€œAS ISâ€�, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING 
+ * THE SOFTWARE IS PROVIDED AS IS, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING 
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND 
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, 
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
@@ -25,12 +25,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.Statement;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 
@@ -148,7 +150,7 @@ public class OperationOnDataBase {
 	public static int insertRecords(int randomNum,String randomString) {
 		try{
 		statement=connection.createStatement();
-		int added=statement.executeUpdate("Insert into transactions(random_number,random_string) values("+randomNum+",'"+randomString+"')");
+		int added=statement.executeUpdate("Insert into "+tableName+" values(null,"+randomNum+",'"+randomString+"')");
 		UniqueRecordsAdded++;
 		return added;
 		
@@ -212,12 +214,24 @@ public class OperationOnDataBase {
 		System.out.println("Enter the total no records to save?");
 		int totalRecords=scanner.nextInt();
 		UniqueRecordsAdded=0;
+		long lStartTime = new Date().getTime();
 		for(int i=1;i<=totalRecords;i++)
 		{
 		randomNumber=Toolbox.generateNumber(minVal, maxVal);
 		randomString=Toolbox.generateRandomString(minlength, maxlength, isAlphanumeric, iswithSpecialChar);
 		insertRecords(randomNumber, randomString);
 		}
-		System.out.println("Total number of unique records added are : "+UniqueRecordsAdded);
+		long lEndTime = new Date().getTime();
+		   long difference = lEndTime - lStartTime; // check different
+		   long minutes = TimeUnit.MILLISECONDS.toMinutes(difference);
+		   long seconds = TimeUnit.MILLISECONDS.toSeconds(difference)
+		     - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS
+		       .toMinutes(difference));
+		   System.out.println("Total Time in milli:"+difference);
+		   long milliseconds=difference-TimeUnit.MINUTES.toMillis(minutes)-TimeUnit.SECONDS.toMillis(seconds);
+		   System.out.println("Total number of unique records added are : "+UniqueRecordsAdded);
+		   System.out.println("Elapsed minutes: " + minutes
+		     + " , Elapsed seconds: " + seconds+" and Elapsed milliseconds: "+milliseconds);
+		
 	}
 }
