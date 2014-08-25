@@ -117,7 +117,8 @@ public class OperationOnDataBase {
 			ResultSet resultSet = ps.executeQuery();
 			ResultSetMetaData metadata = resultSet.getMetaData();
 			int columnCount = metadata.getColumnCount();
-
+  
+			
 			for (int j = 1; j <= columnCount; j++) {
 				internalColumnMap = new HashMap<String, String>();
 				if (!metadata.isAutoIncrement(j)) {
@@ -148,7 +149,12 @@ public class OperationOnDataBase {
 		}
 
 	}
-
+	/**
+	 * 
+	 * @param randomNum
+	 * @param randomString
+	 * @return
+	 */
 	public static int insertRecords(int randomNum,String randomString) {
 		try{
 		statement=connection.createStatement();
