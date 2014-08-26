@@ -64,6 +64,7 @@ public class OperationOnDataBase {
 	 * @since 1.0
 	 * @version 1.0
 	 */
+	
 	public static void getTables() {
 		try {
 			DBUtil.loadDriver(SupportedDatabases.MYSQL);
@@ -186,12 +187,21 @@ public class OperationOnDataBase {
 			count = resultSet.getInt("rowcount");
 		}
 		int minVal = 0, maxVal = 0, minlength = 0, maxlength = 0;
+		String orderColumnName=null; 
+		for(String columnName:columnsDetailMap.keySet())
+		{
+			if("INT".equalsIgnoreCase(columnsDetailMap.get(columnName).get("dataType")))
+			{
+				orderColumnName=columnName;
+				break;
+			}
+		}
 		boolean minCheck = false;
 		if (count > 0) {
 			statement = null;
 			statement = connection.createStatement();
 			resultSet = statement.executeQuery("select * from " + tableName
-					+ " order by random_number desc limit 0,1");
+					+ " order by "+orderColumnName+" desc limit 0,1");
 			while (resultSet.next()) {
 				minVal = resultSet.getInt(2);
 			}
@@ -300,7 +310,7 @@ public class OperationOnDataBase {
 		long seconds = TimeUnit.MILLISECONDS.toSeconds(difference)
 				- TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS
 						.toMinutes(difference));
-		// System.out.println("Total Time in milli:" + difference);
+		// System.out.println("Total Time in milliseconds:" + difference);
 		long milliseconds = difference - TimeUnit.MINUTES.toMillis(minutes)
 				- TimeUnit.SECONDS.toMillis(seconds);
 		System.out.println("\nTotal number of unique records added are : "
