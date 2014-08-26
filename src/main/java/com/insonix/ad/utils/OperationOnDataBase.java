@@ -19,6 +19,7 @@
 
 package com.insonix.ad.utils;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
@@ -185,7 +186,7 @@ public class OperationOnDataBase {
 			count = resultSet.getInt("rowcount");
 		}
 		int minVal = 0, maxVal = 0, minlength = 0, maxlength = 0;
-		boolean minCheck=false;
+		boolean minCheck = false;
 		if (count > 0) {
 			statement = null;
 			statement = connection.createStatement();
@@ -194,15 +195,14 @@ public class OperationOnDataBase {
 			while (resultSet.next()) {
 				minVal = resultSet.getInt(2);
 			}
-			
-			if(minVal>0)
-			{
-				System.out.println("Do you want to keep "+minVal+" maximum value of db as minimum value?(Y/N)");
-				minCheck=("Y").equalsIgnoreCase(sc.next());
-				if(!minCheck)
-				{
-					statement.executeUpdate("TRUNCATE "+tableName);
-					minVal=0;
+
+			if (minVal > 0) {
+				System.out.println("Do you want to keep " + minVal
+						+ " maximum value of db as minimum value?(Y/N)");
+				minCheck = ("Y").equalsIgnoreCase(sc.next());
+				if (!minCheck) {
+					statement.executeUpdate("TRUNCATE " + tableName);
+					minVal = 0;
 				}
 			}
 		}
@@ -215,10 +215,13 @@ public class OperationOnDataBase {
 				System.out.println("Please Enter the below values for "
 						+ string + ". Value generated will be of integer type");
 				while (minVal > maxVal || minVal < 0 || maxVal <= 0) {
-					if(!minCheck)
-					{
-					System.out.println("Enter the minimum value: ");
-					minVal = sc.nextInt();
+					if (maxVal < minVal) {
+						System.out
+								.println("Please re-Enter the values. max Value must be greater than min Value.");
+					}
+					if (!minCheck) {
+						System.out.println("Enter the minimum value: ");
+						minVal = sc.nextInt();
 					}
 					System.out.println("Enter the maximum value: ");
 					maxVal = sc.nextInt();
@@ -239,6 +242,10 @@ public class OperationOnDataBase {
 						|| maxlength <= 0
 						|| maxlength > Integer.parseInt(columnsDetailMap.get(
 								string).get("size"))) {
+					if (minlength < 0 || maxlength > 45) {
+						System.out
+								.println("Please re-Enter the values. minlength>0 && maxlength<45.");
+					}
 					System.out.println("Enter the minimum length of string: ");
 					minlength = sc.nextInt();
 					System.out.println("Enter the maximum length of string: ");
@@ -253,12 +260,21 @@ public class OperationOnDataBase {
 				iswithSpecialChar = ("Y").equalsIgnoreCase(splchar);
 			}
 		}
-
-		System.out.println("Enter the total no records to save?");
-		int totalRecords = sc.nextInt();
+		int totalRecords = 0;
+		while (totalRecords == 0 || totalRecords > (maxVal - minVal)) {
+			if (totalRecords > (maxVal - minVal) && totalRecords != 0) {
+				System.out
+						.println("We cannot generate more records than actual difference between values.");
+			}
+			System.out.println("Enter the total no records to save?");
+			totalRecords = sc.nextInt();
+		}
 		UniqueRecordsAdded = 0;
 		long lStartTime = new Date().getTime();
 		list = new int[totalRecords];
+		int percentage_number = totalRecords / 8; // percentage_number is used
+													// to show the 8-9 %age
+													// strings
 		for (int i = 1; i <= totalRecords; i++) {
 			randomNumber = Toolbox.generateNumber(minVal, maxVal);
 			while (check(randomNumber)) {
@@ -269,6 +285,14 @@ public class OperationOnDataBase {
 			randomString = Toolbox.generateRandomString(minlength, maxlength,
 					isAlphanumeric, iswithSpecialChar);
 			insertRecords(randomNumber, randomString);
+			if (i % percentage_number == 0 && i < totalRecords) {
+				System.out.println("\n%age of records processed : "
+						+ new BigDecimal((float) (i * 100) / totalRecords)
+								.setScale(2, BigDecimal.ROUND_UP) + "%");
+			} else if (i == totalRecords)
+				System.out.println("\n%age of records processed : "
+						+ new BigDecimal((float) (i * 100) / totalRecords)
+								.setScale(2, BigDecimal.ROUND_UP) + "%");
 		}
 		long lEndTime = new Date().getTime();
 		long difference = lEndTime - lStartTime; // check different
@@ -276,15 +300,14 @@ public class OperationOnDataBase {
 		long seconds = TimeUnit.MILLISECONDS.toSeconds(difference)
 				- TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS
 						.toMinutes(difference));
-		System.out.println("Total Time in milli:" + difference);
+		// System.out.println("Total Time in milli:" + difference);
 		long milliseconds = difference - TimeUnit.MINUTES.toMillis(minutes)
 				- TimeUnit.SECONDS.toMillis(seconds);
-		System.out.println("Total number of unique records added are : "
+		System.out.println("\nTotal number of unique records added are : "
 				+ UniqueRecordsAdded);
-		System.out.println("Elapsed minutes: " + minutes
+		System.out.println("\nElapsed minutes: " + minutes
 				+ " , Elapsed seconds: " + seconds
 				+ " and Elapsed milliseconds: " + milliseconds);
-
 	}
 
 	/**
